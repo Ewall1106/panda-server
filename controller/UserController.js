@@ -41,7 +41,7 @@ const UserController = {
       return;
     }
     // 验证邮箱验证码
-    const redisMailCode = await getValue(mailsid);
+    const redisMailCode = await getValue(email);
     if (!redisMailCode) {
       ctx.body = {
         code: 400,
