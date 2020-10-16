@@ -22,7 +22,7 @@ const UserController = {
 
   // registration
   async registry(ctx, next) {
-    const { email, password, confirmPassword, mailcode, captcha, sid, mailsid } = ctx.request.body;
+    const { email, password, confirmPassword, mailcode, captcha, sid } = ctx.request.body;
     // 邮箱已经被注册
     const user = await User.findOne({ username: email });
     if (user && user.username) {
@@ -41,7 +41,7 @@ const UserController = {
       return;
     }
     // 验证邮箱验证码
-    const redisMailCode = await getValue(mailsid);
+    const redisMailCode = await getValue(email);
     if (!redisMailCode) {
       ctx.body = {
         code: 400,
@@ -122,7 +122,6 @@ const UserController = {
       };
       return;
     }
-
     // 登录成功
     const token = jwt.sign({ uid: user._id }, JWT_SECRET, { expiresIn: '15d' });
     ctx.body = {
