@@ -5,7 +5,8 @@
   "description": "使用node+koa+mongodb实现mall商城的后端服务",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "start": "nodemon app.js"
   },
   "dependencies": {
     "@koa/router": "^9.4.0",
