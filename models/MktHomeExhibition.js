@@ -1,7 +1,7 @@
 const mongoose = require('../config/mongo.js');
 
 module.exports = mongoose.model(
-  'mkt_sessions',
+  'mkt_home_exhibitions',
   new mongoose.Schema({
     img: String,
     title: String,

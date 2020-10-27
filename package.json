@@ -27,6 +27,7 @@
     "mongoose": "^5.10.2",
     "nodemailer": "^6.4.11",
     "redis": "^3.0.2",
+    "shortid": "^2.2.16",
     "svg-captcha": "^1.4.0"
   },
   "devDependencies": {

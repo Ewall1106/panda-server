@@ -1,21 +1,21 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const shortid = require('shortid');
+
 const { JWT_SECRET } = require('../config/index');
 const { getValue } = require('../config/redis');
 const { getJwtPayload } = require('../utils');
 
+const UserInfo = require('../models/UserInfo');
+
 const UserController = {
   // 获取用户基本信息
-  async getUserInfo(ctx, next) {
+  async getUserInfo(ctx) {
     const { uid } = await getJwtPayload(ctx.header.authorization);
-    const data = await User.findOne({ _id: uid });
+    const data = await UserInfo.findOne({ uid });
     ctx.body = {
       code: 200,
-      entry: {
-        username: data.username,
-        uid,
-      },
+      entry: data,
     };
   },
 
@@ -30,7 +30,7 @@ const UserController = {
       sid,
     } = ctx.request.body;
     // 邮箱已经被注册
-    const user = await User.findOne({ username: email });
+    const user = await UserInfo.findOne({ username: email });
     if (user && user.username) {
       ctx.body = {
         code: 400,
@@ -79,10 +79,22 @@ const UserController = {
       return;
     }
     // 注册写入数据库
-    await User.create({
+    shortid.characters(
+      '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@'
+    );
+    const uid = shortid.generate();
+    await UserInfo.create({
+      uid,
       username: email,
       password: bcrypt.hashSync(password, 3),
+      nickname: `用户${uid}`,
+      avatar: 'https://s1.ax1x.com/2020/10/27/BQK16e.png',
+      age: '',
+      role: null,
+      gender: 0,
+      points: 0,
     });
+
     ctx.body = {
       code: 200,
       entry: {
@@ -95,15 +107,15 @@ const UserController = {
   // 重置密码
   async reset(ctx, next) {
     const { email, password, confirmPassword, mailcode } = ctx.request.body;
-     // 验证用户是否存在
-    const user = await User.findOne({ username: email });
-     if (!user) {
-       ctx.body = {
-         code: 400,
-         message: '用户不存在 请直接注册',
-       };
-       return;
-     }
+    // 验证用户是否存在
+    const user = await UserInfo.findOne({ username: email });
+    if (!user) {
+      ctx.body = {
+        code: 400,
+        message: '用户不存在 请直接注册',
+      };
+      return;
+    }
     // 验证密码是否一致
     if (password !== confirmPassword) {
       ctx.body = {
@@ -129,7 +141,7 @@ const UserController = {
       return;
     }
     // 更新密码
-    await User.updateOne({ _id: user._id }, { password });
+    await UserInfo.updateOne({ uid: user.uid }, { password });
     ctx.body = {
       code: 200,
       message: '更新用户密码成功',
@@ -156,7 +168,7 @@ const UserController = {
       return;
     }
     // 验证用户是否存在
-    const user = await User.findOne({ username });
+    const user = await UserInfo.findOne({ username });
     if (!user) {
       ctx.body = {
         code: 400,
@@ -173,7 +185,7 @@ const UserController = {
       return;
     }
     // 登录成功
-    const token = jwt.sign({ uid: user._id }, JWT_SECRET, { expiresIn: '15d' });
+    const token = jwt.sign({ uid: user.uid }, JWT_SECRET, { expiresIn: '15d' });
     ctx.body = {
       code: 200,
       entry: {

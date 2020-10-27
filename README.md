@@ -22,7 +22,6 @@
 
 [Panda-mall](https://github.com/Ewall1106/mall/) 商城的后端项目，技术栈主要使用 `node+koa+mongodb` 来实现。
 
-- [项目预览](https://mall.xwhx.top/)
 - [文档说明](https://docs.xwhx.top/base/)
 - [更新日志](https://github.com/Ewall1106/panda-server/blob/master/changelog.md)
 
