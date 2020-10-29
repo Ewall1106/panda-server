@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const shortid = require('shortid');
+const { customAlphabet } = require('nanoid');
+const nanoid = customAlphabet('1234567890', 6);
+console.log(nanoid())
 
 const { JWT_SECRET } = require('../config/index');
 const { getValue } = require('../config/redis');
@@ -82,7 +84,7 @@ const UserController = {
     shortid.characters(
       '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@'
     );
-    const uid = shortid.generate();
+    const uid = nanoid();
     await UserInfo.create({
       uid,
       username: email,

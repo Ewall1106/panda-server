@@ -5,6 +5,5 @@ module.exports = mongoose.model(
   new mongoose.Schema({
     img: String,
     type: Number,
-    
   })
 );
