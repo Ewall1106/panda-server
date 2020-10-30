@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { customAlphabet } = require('nanoid');
 const nanoid = customAlphabet('1234567890', 6);
-console.log(nanoid())
+// console.log(nanoid())
 
 const { JWT_SECRET } = require('../config/index');
 const { getValue } = require('../config/redis');

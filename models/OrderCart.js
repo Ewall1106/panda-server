@@ -1,17 +1,18 @@
 const mongoose = require('../config/mongo.js');
 
 module.exports = mongoose.model(
-  'product_details',
+  'order_carts',
   new mongoose.Schema({
+    uid: String,
     productId: String,
-    banner: Array,
-    title: String,
     desc: String,
+    skuId: String,
+    img: String,
+    title: String,
+    tag: String,
+    tags: Array,
     price: Number,
     oldPrice: Number,
-    service: Array,
-    serviceDetail: Array,
-    sku: Object,
-    details: String,
+    num: Number,
   })
 );

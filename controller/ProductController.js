@@ -26,6 +26,7 @@ const ProductController = {
     }
 
     const data = await ProductDetail.findOne({ productId });
+    
     ctx.body = {
       code: 200,
       entry: data,
