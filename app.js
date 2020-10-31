@@ -22,7 +22,7 @@ onerror(app);
 
 // middleware
 app.use(json());
-app.use(koaBody());
+app.use(koaBody({ parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'] }));
 app.use(helmet());
 app.use(logger());
 app.use(compress());

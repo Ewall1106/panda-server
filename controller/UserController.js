@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { customAlphabet } = require('nanoid');
-const nanoid = customAlphabet('1234567890', 6);
-// console.log(nanoid())
+const nanoid = customAlphabet('123456789', 6);
 
 const { JWT_SECRET } = require('../config/index');
 const { getValue } = require('../config/redis');
 const { getJwtPayload } = require('../utils');
 
 const UserInfo = require('../models/UserInfo');
+const UserAddress = require('../models/UserAddress');
 
 const UserController = {
   // 获取用户基本信息
@@ -17,12 +17,23 @@ const UserController = {
     const data = await UserInfo.findOne({ uid });
     ctx.body = {
       code: 200,
-      entry: data,
+      entry: {
+        uid,
+        username: data.username,
+        nickname: data.nickname,
+        avatar: data.avatar,
+        age: data.age,
+        role: data.role,
+        gender: data.gender,
+        points: data.points,
+        mark: data.mark,
+      },
+      message: '获取用户信息成功',
     };
   },
 
   // 注册
-  async registry(ctx, next) {
+  async registry(ctx) {
     const {
       email,
       password,
@@ -107,7 +118,7 @@ const UserController = {
   },
 
   // 重置密码
-  async reset(ctx, next) {
+  async reset(ctx) {
     const { email, password, confirmPassword, mailcode } = ctx.request.body;
     // 验证用户是否存在
     const user = await UserInfo.findOne({ username: email });
@@ -151,7 +162,7 @@ const UserController = {
   },
 
   // 登录
-  async login(ctx, next) {
+  async login(ctx) {
     const { username, password, captcha, sid } = ctx.request.body;
     // 验证图形验证码
     const value = await getValue(sid);
@@ -194,6 +205,76 @@ const UserController = {
         token,
       },
     };
+  },
+
+  // 添加地址
+  async addAddress(ctx) {
+    const { uid } = await getJwtPayload(ctx.header.authorization);
+    const address = ctx.request.body;
+    // 如果是isDefault则其它设置为false
+    if (address.isDefault)
+      await UserAddress.update({ uid }, { isDefault: false });
+    await UserAddress.create({
+      uid,
+      ...address,
+      fullAddress: `${address.province}${address.city}${address.county}${address.addressDetail}`,
+    });
+
+    ctx.body = {
+      code: 200,
+      message: '添加成功',
+    };
+  },
+
+  async deleteAddress(ctx) {
+    const { addressId } = ctx.request.body;
+    await UserAddress.deleteOne({ addressId });
+    ctx.body = {
+      code: 200,
+      message: '删除成功',
+    };
+  },
+
+  // 更新地址
+  async updateAddress(ctx) {
+    const address = ctx.request.body;
+    await UserAddress.updateOne(
+      { addressId: address.addressId },
+      {
+        ...address,
+        fullAddress: `${address.province}${address.city}${address.county}${address.addressDetail}`,
+      }
+    );
+    ctx.body = {
+      code: 200,
+      message: '更新成功',
+    };
+  },
+
+  // 获取地址
+  async getAddress(ctx) {
+    const { type, addressId = '' } = ctx.request.query;
+    const { uid } = await getJwtPayload(ctx.header.authorization);
+
+    if (type === 'list') {
+      const data = await UserAddress.find({ uid });
+      ctx.body = {
+        code: 200,
+        entry: data || [],
+        message: '获取地址成功',
+      };
+      return;
+    }
+
+    if (type === 'single') {
+      const data = await UserAddress.findOne({ addressId });
+      ctx.body = {
+        code: 200,
+        entry: data || {},
+        message: '获取地址成功',
+      };
+      return;
+    }
   },
 };
 

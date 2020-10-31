@@ -18,13 +18,13 @@ const OrderController = {
     const { uid } = await getJwtPayload(ctx.header.authorization);
     const { productId, skuId, selectedNum } = ctx.request.body;
 
-    // 该sku在用户购物车中已经存在
+    // 该sku在用户购物车中是否已经存在
     const userSku = await OrderCart.findOne({ uid, skuId });
     if (userSku && userSku.skuId) {
       let num = userSku.num + selectedNum;
       await OrderCart.updateOne({ uid, skuId }, { num });
     } else {
-      const { title, desc, banner, sku } = await ProductDetail.findOne({
+      const { title, desc, sku } = await ProductDetail.findOne({
         productId,
       });
 
@@ -33,7 +33,7 @@ const OrderController = {
         uid,
         productId,
         skuId,
-        img: banner[0],
+        img: skuItem.imgUrl,
         title,
         desc,
         tag: skuItem.tag,

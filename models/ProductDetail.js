@@ -12,6 +12,7 @@ module.exports = mongoose.model(
     service: Array,
     serviceDetail: Array,
     sku: Object,
+    goods: Object,
     details: String,
   })
 );

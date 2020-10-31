@@ -16,7 +16,7 @@ const ProductController = {
 
   async getDetail(ctx) {
     const { productId } = ctx.request.body;
-    
+
     if (!productId) {
       ctx.body = {
         code: 400,
@@ -26,10 +26,22 @@ const ProductController = {
     }
 
     const data = await ProductDetail.findOne({ productId });
-    
+
     ctx.body = {
       code: 200,
-      entry: data,
+      entry: {
+        productId: data.productId,
+        banner: data.banner,
+        title: data.title,
+        desc: data.desc,
+        price: data.price,
+        oldPrice: data.oldPrice,
+        service: ['七天无理由退款', '熊猫商城自营', '送货上门'],
+        serviceDetail: [],
+        sku: data.sku,
+        goods: data.goods,
+        details: data.details,
+      },
     };
   },
 };
