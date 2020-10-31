@@ -11,5 +11,7 @@ router.post('/address', UserController.addAddress);
 router.get('/address', UserController.getAddress);
 router.put('/address', UserController.updateAddress);
 router.delete('/address', UserController.deleteAddress);
+router.get('/address/list', UserController.getAddressList);
+router.put('/address/list', UserController.setAddressList);
 
 module.exports = router;

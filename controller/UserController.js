@@ -211,12 +211,13 @@ const UserController = {
   async addAddress(ctx) {
     const { uid } = await getJwtPayload(ctx.header.authorization);
     const address = ctx.request.body;
-    // 如果是isDefault则其它设置为false
-    if (address.isDefault)
-      await UserAddress.update({ uid }, { isDefault: false });
+    if (address.isDefault) {
+      await UserAddress.updateMany({ uid }, { isDefault: false });
+    }
     await UserAddress.create({
       uid,
       ...address,
+      defaultId: '',
       fullAddress: `${address.province}${address.city}${address.county}${address.addressDetail}`,
     });
 
@@ -226,6 +227,7 @@ const UserController = {
     };
   },
 
+  // 删除地址
   async deleteAddress(ctx) {
     const { addressId } = ctx.request.body;
     await UserAddress.deleteOne({ addressId });
@@ -237,7 +239,11 @@ const UserController = {
 
   // 更新地址
   async updateAddress(ctx) {
+    const { uid } = await getJwtPayload(ctx.header.authorization);
     const address = ctx.request.body;
+    if (address.isDefault) {
+      await UserAddress.updateMany({ uid }, { isDefault: false });
+    }
     await UserAddress.updateOne(
       { addressId: address.addressId },
       {
@@ -253,28 +259,40 @@ const UserController = {
 
   // 获取地址
   async getAddress(ctx) {
-    const { type, addressId = '' } = ctx.request.query;
+    const { addressId } = ctx.request.query;
+    const data = await UserAddress.findOne({ addressId });
+
+    ctx.body = {
+      code: 200,
+      entry: data || {},
+      message: '获取地址成功',
+    };
+  },
+
+  // 获取地址列表
+  async getAddressList(ctx) {
     const { uid } = await getJwtPayload(ctx.header.authorization);
+    const data = await UserAddress.find({ uid });
 
-    if (type === 'list') {
-      const data = await UserAddress.find({ uid });
-      ctx.body = {
-        code: 200,
-        entry: data || [],
-        message: '获取地址成功',
-      };
-      return;
-    }
+    ctx.body = {
+      code: 200,
+      entry: {
+        defaultId: (data && data.length && data[0].defaultId) || '',
+        list: data || [],
+      },
+      message: '获取地址成功',
+    };
+  },
 
-    if (type === 'single') {
-      const data = await UserAddress.findOne({ addressId });
-      ctx.body = {
-        code: 200,
-        entry: data || {},
-        message: '获取地址成功',
-      };
-      return;
-    }
+  // 设置地址列表
+  async setAddressList(ctx) {
+    const { uid } = await getJwtPayload(ctx.header.authorization);
+    const { id } = ctx.request.body;
+    await UserAddress.updateMany({ uid }, { defaultId: id });
+    ctx.body = {
+      code: 200,
+      message: '更新所选地址成功',
+    };
   },
 };
 

@@ -5,6 +5,7 @@ module.exports = mongoose.model(
   new mongoose.Schema({
     uid: String,
     addressId: String,
+    defaultId: String,
     name: String,
     tel: Number,
     province: String,
