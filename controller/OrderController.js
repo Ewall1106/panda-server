@@ -1,5 +1,6 @@
 const OrderCart = require('../models/OrderCart');
-const ProductDetail = require('../models/ProductDetail');
+const ProductSku = require('../models/ProductSku');
+const ProductList = require('../models/ProductList');
 
 const { getJwtPayload } = require('../utils');
 
@@ -24,18 +25,17 @@ const OrderController = {
       let num = userSku.num + selectedNum;
       await OrderCart.updateOne({ uid, skuId }, { num });
     } else {
-      const { title, desc, sku } = await ProductDetail.findOne({
-        productId,
+      const skuItem = await ProductSku.findOne({
+        skuId,
       });
+      const goods = await ProductList.findOne({ productId });
 
-      const skuItem = sku.list.find((item) => item.id === skuId);
       const data = {
         uid,
-        productId,
         skuId,
         img: skuItem.imgUrl,
-        title,
-        desc,
+        title: goods.title,
+        desc: goods.desc,
         tag: skuItem.tag,
         tags: skuItem.tags,
         price: skuItem.price,

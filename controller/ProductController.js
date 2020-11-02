@@ -1,7 +1,11 @@
 const ProductList = require('../models/ProductList');
-const ProductDetail = require('../models/ProductDetail');
+const ProductSku = require('../models/ProductSku');
+
+const { customAlphabet } = require('nanoid');
+const nanoid = customAlphabet('123456789', 6);
 
 const ProductController = {
+  // 获取商品列表
   async getList(ctx) {
     const { pageSize, pageNo } = ctx.request.body;
     const data = await ProductList.find({})
@@ -14,6 +18,7 @@ const ProductController = {
     };
   },
 
+  // 商品商品详情
   async getDetail(ctx) {
     const { productId } = ctx.request.body;
 
@@ -25,7 +30,48 @@ const ProductController = {
       return;
     }
 
-    const data = await ProductDetail.findOne({ productId });
+    const data = await ProductList.findOne({ productId });
+    const sku = await ProductSku.find({ productId });
+
+    // format tree
+    const tree = [];
+    const { attrNameKey, attrNameDetail } = sku[0];
+
+    attrNameKey.forEach((attr, idx) => {
+      tree.push({
+        k: attr,
+        k_s: `s${idx}`,
+        v: [],
+      });
+    });
+
+    attrNameDetail.forEach((item, idx) => {
+      for (let i = 0; i < item.length; i++) {
+        const { id, attr, detail } = item[i];
+        tree[idx].v.push({
+          id,
+          name: attr,
+          imgUrl: detail.imgUrl,
+          previewImgUrl: detail.previewImgUrl,
+        });
+      }
+    });
+
+    // format list
+    const list = [];
+    sku.forEach((item) => {
+      list.push({
+        id: item.skuId,
+        productId: item.productId,
+        s0: item.s0,
+        s1: item.s1,
+        name: item.name,
+        price: item.price,
+        stock_num: item.stockNum,
+        tag: item.tag,
+        tags: item.tags,
+      });
+    });
 
     ctx.body = {
       code: 200,
@@ -38,8 +84,17 @@ const ProductController = {
         oldPrice: data.oldPrice,
         service: ['七天无理由退款', '熊猫商城自营', '送货上门'],
         serviceDetail: [],
-        sku: data.sku,
-        goods: data.goods,
+        sku: {
+          tree,
+          list,
+          price: '1231',
+          collection_id: '',
+          hide_stock: false,
+          none_sku: false,
+          messages: [],
+          stock_num: 227,
+        },
+        goods: { picture: data.banner[0] },
         details: data.details,
       },
     };
