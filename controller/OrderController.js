@@ -1,8 +1,10 @@
 const OrderCart = require('../models/OrderCart');
 const ProductSku = require('../models/ProductSku');
 const ProductList = require('../models/ProductList');
+const OrderList = require('../models/OrderList');
 
 const { getJwtPayload } = require('../utils');
+const { nanoid } = require('nanoid');
 
 const OrderController = {
   // 获取购物车列表
@@ -49,6 +51,51 @@ const OrderController = {
     ctx.body = {
       code: 200,
       message: '加入购物车成功',
+    };
+  },
+
+  // 获取确认订单列表
+  async getList(ctx) {
+    const { ids } = ctx.request.body;
+
+    const skuId = ids.reduce((memo, current, index, array) => {
+      memo[index] = current.id;
+      return memo;
+    }, []);
+
+    const list = await ProductSku.find({ skuId: { $in: skuId } });
+
+    const rlt = list.reduce((memo, current, index, array) => {
+      memo.push({
+        skuId: current.skuId,
+        title: current.title,
+        skuAttr: current.skuAttr,
+        price: current.price,
+        imgUrl: current.imgUrl,
+        selectedNum: ids[index].selectedNum,
+      });
+      return memo;
+    }, []);
+
+    ctx.body = {
+      code: 200,
+      entry: rlt,
+    };
+  },
+
+  // 确认订单
+  async settleOrder(ctx) {
+    const { uid, list } = ctx.request.body;
+    const orderId = nanoid();
+    await OrderList.create({
+      orderId,
+      uid,
+      list,
+    });
+    ctx.body = {
+      code: 200,
+      entry: orderId,
+      message: '创建订单成功',
     };
   },
 };
