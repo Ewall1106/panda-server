@@ -9,7 +9,24 @@ const { nanoid } = require('nanoid');
 const OrderController = {
   // 获取购物车列表
   async getCartList(ctx) {
-    const data = await OrderCart.find({});
+    const { uid } = await getJwtPayload(ctx.header.authorization);
+    const list = await OrderCart.find({ uid });
+    const data = list.reduce((memo, current, index, array) => {
+      memo[index] = {
+        desc: current.desc,
+        img: current.img,
+        num: current.num,
+        oldPrice: current.oldPrice,
+        price: current.price,
+        skuAttr: current.skuAttr,
+        skuId: current.skuId,
+        tag: current.tag,
+        tags: current.tags,
+        title: current.title,
+      };
+      return memo
+    }, []);
+    
     ctx.body = {
       code: 200,
       entry: data,
@@ -43,6 +60,7 @@ const OrderController = {
         price: skuItem.price,
         oldPrice: skuItem.oldPrice,
         num: selectedNum,
+        skuAttr: skuItem.skuAttr,
       };
 
       await OrderCart.create(data);
@@ -51,6 +69,17 @@ const OrderController = {
     ctx.body = {
       code: 200,
       message: '加入购物车成功',
+    };
+  },
+
+  // 删除购物车
+  async deleteCart(ctx) {
+    const { skuId } = ctx.request.body;
+    await OrderCart.deleteOne({ skuId });
+
+    ctx.body = {
+      code: 200,
+      message: '删除成功',
     };
   },
 
@@ -96,6 +125,21 @@ const OrderController = {
       code: 200,
       entry: orderId,
       message: '创建订单成功',
+    };
+  },
+
+  // 获取订单列表
+  async getUserList(ctx) {
+    const { uid } = await getJwtPayload(ctx.header.authorization);
+    const { type, pageSize, pageNo } = ctx.request.query;
+
+    const data = await OrderList.find({ uid }, null, {
+      skip: (pageNo - 1) * pageSize,
+    });
+
+    ctx.body = {
+      code: 200,
+      entry: data.slice(0, pageSize),
     };
   },
 };

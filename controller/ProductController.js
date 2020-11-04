@@ -44,7 +44,7 @@ const ProductController = {
         v: [],
       });
     });
-
+    
     attrNameDetail.forEach((item, idx) => {
       for (let i = 0; i < item.length; i++) {
         const { id, attr, detail } = item[i];
@@ -87,7 +87,7 @@ const ProductController = {
         sku: {
           tree,
           list,
-          price: '1231',
+          price: `${data.price / 100}`,
           collection_id: '',
           hide_stock: false,
           none_sku: false,

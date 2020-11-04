@@ -14,5 +14,6 @@ module.exports = mongoose.model(
     price: Number,
     oldPrice: Number,
     num: Number,
+    skuAttr: Array,
   })
 );

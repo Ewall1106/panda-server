@@ -11,7 +11,7 @@ module.exports = mongoose.model(
     oldPrice: Number,
     discount: Number,
     percentage: Number,
-    banner:Array,
-    details:String,
+    banner: Array,
+    details: Array,
   })
 );
