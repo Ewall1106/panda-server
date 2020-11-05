@@ -41,7 +41,7 @@ const HomeController = {
         title: current.title,
         desc: current.desc,
         price: current.price,
-        oldPrice: current.price,
+        oldPrice: current.oldPrice,
       };
       return memo;
     }, []);

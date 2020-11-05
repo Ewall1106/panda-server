@@ -29,11 +29,7 @@ app.use(compress());
 app.use(require('koa-static')(path.resolve(__dirname, '/public')));
 app.use(views(path.resolve(__dirname, '/views'), { extension: 'pug' }));
 app.use(JwtErrorHandler);
-app.use(
-  jwt({ secret: JWT_SECRET }).unless({
-    path: [/^\/public/, /\/login/, /\/registry/, /\/reset/],
-  })
-);
+app.use(jwt({ secret: JWT_SECRET, passthrough: true }));
 
 // logger
 app.use(async (ctx, next) => {

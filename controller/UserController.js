@@ -92,9 +92,6 @@ const UserController = {
       return;
     }
     // 注册写入数据库
-    shortid.characters(
-      '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@'
-    );
     const uid = nanoid();
     await UserInfo.create({
       uid,
@@ -154,7 +151,10 @@ const UserController = {
       return;
     }
     // 更新密码
-    await UserInfo.updateOne({ uid: user.uid }, { password });
+    await UserInfo.updateOne(
+      { uid: user.uid },
+      { password: bcrypt.hashSync(password, 3) }
+    );
     ctx.body = {
       code: 200,
       message: '更新用户密码成功',
@@ -163,17 +163,23 @@ const UserController = {
 
   // 登录
   async login(ctx) {
-    const { username, password, captcha, sid } = ctx.request.body;
+    const {
+      username,
+      password,
+      captcha,
+      sid,
+      isCaptchaShow,
+    } = ctx.request.body;
     // 验证图形验证码
     const value = await getValue(sid);
-    if (!value) {
+    if (!value && isCaptchaShow) {
       ctx.body = {
         code: 400,
         message: '图形验证码已过期，请点击图片刷新',
       };
       return;
     }
-    if (captcha.toLowerCase() !== value.toLowerCase()) {
+    if (isCaptchaShow && captcha.toLowerCase() !== value.toLowerCase()) {
       ctx.body = {
         code: 400,
         message: '请输入正确的验证码',
