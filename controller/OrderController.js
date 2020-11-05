@@ -13,6 +13,7 @@ const OrderController = {
     const list = await OrderCart.find({ uid });
     const data = list.reduce((memo, current, index, array) => {
       memo[index] = {
+        productId: current.productId,
         desc: current.desc,
         img: current.img,
         num: current.num,
@@ -24,9 +25,9 @@ const OrderController = {
         tags: current.tags,
         title: current.title,
       };
-      return memo
+      return memo;
     }, []);
-    
+
     ctx.body = {
       code: 200,
       entry: data,
@@ -52,6 +53,7 @@ const OrderController = {
       const data = {
         uid,
         skuId,
+        productId,
         img: skuItem.imgUrl,
         title: goods.title,
         desc: goods.desc,
@@ -98,6 +100,7 @@ const OrderController = {
       memo.push({
         skuId: current.skuId,
         title: current.title,
+        desc: current.desc,
         skuAttr: current.skuAttr,
         price: current.price,
         imgUrl: current.imgUrl,

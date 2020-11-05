@@ -1,9 +1,6 @@
 const ProductList = require('../models/ProductList');
 const ProductSku = require('../models/ProductSku');
 
-const { customAlphabet } = require('nanoid');
-const nanoid = customAlphabet('123456789', 6);
-
 const ProductController = {
   // 获取商品列表
   async getList(ctx) {
@@ -44,7 +41,7 @@ const ProductController = {
         v: [],
       });
     });
-    
+
     attrNameDetail.forEach((item, idx) => {
       for (let i = 0; i < item.length; i++) {
         const { id, attr, detail } = item[i];

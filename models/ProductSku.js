@@ -7,6 +7,7 @@ module.exports = mongoose.model(
     productId: String,
     name: String,
     title: String,
+    desc: String,
     price: Number,
     oldPrice: Number,
     skuAttr: Array,
