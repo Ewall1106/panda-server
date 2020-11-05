@@ -85,6 +85,20 @@ const OrderController = {
     };
   },
 
+  // 获取购物车数量
+  async getCartNum(ctx) {
+    const { uid } = await getJwtPayload(ctx.header.authorization);
+    const list = await OrderCart.find({ uid });
+    let num = 0;
+    list.forEach((item) => {
+      num += item.num;
+    });
+    ctx.body = {
+      code: 200,
+      entry: num,
+    };
+  },
+
   // 获取确认订单列表
   async getList(ctx) {
     const { ids } = ctx.request.body;
