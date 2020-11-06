@@ -1,6 +1,6 @@
 {
   "name": "panda-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Ewall&熊猫",
   "description": "使用node+koa+mongodb实现mall商城的后端服务",
   "main": "app.js",

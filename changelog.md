@@ -1,9 +1,25 @@
 ## 当前规划
 
-- [ ] 抽离业务处理逻辑代码到 `Controller` 控制层
-- [ ] 添加 `koa-eslint`
-
 ## 更新日志
+
+## [v1.0.2](https://github.com/Ewall1106/panda-server/tree/1.0.2)
+
+`2020-11-06`
+
+🎉 **Features**
+
+- 忘记密码功能实现
+- 首页、商品列表、商品详情等数据服务重构
+- 抽离业务处理逻辑代码到 `Controller` 控制层
+- 用户地址接口服务
+- 确认订单接口服务
+
+📚 **Docs**
+
+- 实现图形验证码功能
+- 邮箱验证服务功能实现
+- 维护一份数据表结构文档
+- `JWT` 鉴权功能实现
 
 ## [v1.0.1](https://github.com/Ewall1106/panda-server/tree/1.0.1)
 
