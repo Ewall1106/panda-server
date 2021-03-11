@@ -1,44 +1,48 @@
 'use strict';
 
 const Service = require('egg').Service;
+const bcrypt = require('bcrypt');
+const { customAlphabet } = require('nanoid');
+const nanoid = customAlphabet('123456789', 6);
 
 class UserService extends Service {
   async create(value) {
+    const { ctx } = this;
     const { username, password, confirmPassword, captcha } = value;
-    console.log('>>>>>>>>>>>', username, password, confirmPassword, captcha);
+
     // 名字已经被注册
-    const user = await UserInfo.findOne({ username: email });
+    const user = await ctx.model.User.findOne({ username });
     if (user && user.username) {
-      ctx.body = {
+      return {
         code: 400,
-        message: '邮箱已经注册，可通过邮箱找回密码',
+        status: false,
+        message: '用户名已经被注册啦',
       };
-      return;
     }
-  }
 
-  async find(uid) {
-    // 假如 我们拿到用户 id 从数据库获取用户详细信息
-    const user = await this.ctx.db.query(
-      'select * from user where uid = ?',
-      uid
-    );
+    // 密码设置是否一致
+    if (password !== confirmPassword) {
+      return {
+        code: 400,
+        status: false,
+        message: '确认密码与设置的不一致',
+      };
+    }
 
-    // 假定这里还有一些复杂的计算，然后返回需要的信息。
-    const picture = await this.getPicture(uid);
-
-    return {
-      name: user.user_name,
-      age: user.age,
-      picture,
-    };
-  }
-
-  async getPicture(uid) {
-    const result = await this.ctx.curl(`http://photoserver/uid=${uid}`, {
-      dataType: 'json',
+    // 注册写入数据库
+    const uid = nanoid();
+    await ctx.model.User.create({
+      uid,
+      username,
+      password: bcrypt.hashSync(password, 3),
+      nickname: `用户${uid}`,
+      avatar: 'https://s1.ax1x.com/2020/10/27/BQK16e.png',
     });
-    return result.data;
+    return {
+      code: 200,
+      status: true,
+      message: '注册成功',
+    };
   }
 }
 

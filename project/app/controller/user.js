@@ -6,7 +6,7 @@ class UserController extends Controller {
   async signup() {
     const { ctx } = this;
     const value = ctx.request.body;
-    await ctx.service.user.create(value);
+    ctx.body = await ctx.service.user.create(value);
   }
 
   async signin() {
