@@ -13,6 +13,9 @@ class PublicService extends Service {
     });
 
     return {
+      code: 200,
+      status: true,
+      message: '获取图形验证码成功',
       data,
     };
   }

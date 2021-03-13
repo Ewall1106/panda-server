@@ -2,11 +2,10 @@
 
 const Service = require('egg').Service;
 const bcrypt = require('bcrypt');
-const { customAlphabet } = require('nanoid');
-const nanoid = customAlphabet('123456789', 6);
 
 class UserService extends Service {
-  async create(value) {
+  // 用户注册
+  async registry(value) {
     const { ctx } = this;
     const { username, password, confirmPassword, captcha } = value;
 
@@ -30,7 +29,7 @@ class UserService extends Service {
     }
 
     // 注册写入数据库
-    const uid = nanoid();
+    const uid = ctx.helper.genUID();
     await ctx.model.User.create({
       uid,
       username,
@@ -42,6 +41,63 @@ class UserService extends Service {
       code: 200,
       status: true,
       message: '注册成功',
+    };
+  }
+
+  // 用户登录
+  async login(value) {
+    const { ctx, app } = this;
+    const { username, password } = value;
+
+    // 验证用户是否存在
+    const user = await ctx.model.User.findOne({ username });
+    if (!user) {
+      return {
+        code: 400,
+        status: false,
+        message: '用户不存在',
+      };
+    }
+
+    // 验证密码是否正确
+    if (!bcrypt.compareSync(password, user.password)) {
+      return {
+        code: 400,
+        status: false,
+        message: '用户名或者密码错误',
+      };
+    }
+
+    // 用户登录成功
+    const token = app.jwt.sign({ uid: user.uid }, app.config.jwt.secret, {
+      expiresIn: '15d',
+    });
+    return {
+      code: 200,
+      status: true,
+      message: '登录成功',
+      data: token,
+    };
+  }
+
+  // 用户忘记密码
+  // 获取用户信息
+  async getInfo() {
+    const { ctx } = this;
+    const uid = ctx.helper.getUID();
+    const { username, nickname, avatar } = await ctx.model.User.findOne({
+      uid,
+    });
+    return {
+      code: 200,
+      status: true,
+      message: '获取用户信息成功',
+      data: {
+        uid,
+        username,
+        nickname,
+        avatar,
+      },
     };
   }
 }
