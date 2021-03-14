@@ -5,14 +5,12 @@ const Controller = require('egg').Controller;
 class UserController extends Controller {
   async signup() {
     const { ctx } = this;
-    const value = ctx.request.body;
-    ctx.body = await ctx.service.user.registry(value);
+    ctx.body = await ctx.service.user.registry();
   }
 
   async signin() {
     const { ctx } = this;
-    const value = ctx.request.body;
-    ctx.body = await ctx.service.user.login(value);
+    ctx.body = await ctx.service.user.login();
   }
 
   async getInfo() {

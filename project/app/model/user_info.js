@@ -16,5 +16,5 @@ module.exports = app => {
     },
   });
 
-  return mongoose.model('User', UserSchema);
+  return mongoose.model('user_info', UserSchema);
 };

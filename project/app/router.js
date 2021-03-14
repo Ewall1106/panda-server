@@ -8,6 +8,8 @@ module.exports = app => {
 
   // home
   router.get('/home/banner', controller.home.getBanner);
+  router.get('/home/category', controller.home.getCategory);
+  router.post('/home/list', controller.home.getList);
 
   // userInfo
   router.post('/user/signup', controller.user.signup);

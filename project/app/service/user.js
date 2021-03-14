@@ -5,12 +5,12 @@ const bcrypt = require('bcrypt');
 
 class UserService extends Service {
   // 用户注册
-  async registry(value) {
+  async registry() {
     const { ctx } = this;
-    const { username, password, confirmPassword, captcha } = value;
+    const { username, password, confirmPassword, captcha } = ctx.request.body;
 
     // 名字已经被注册
-    const user = await ctx.model.User.findOne({ username });
+    const user = await ctx.model.UserInfo.findOne({ username });
     if (user && user.username) {
       return {
         code: 400,
@@ -30,7 +30,7 @@ class UserService extends Service {
 
     // 注册写入数据库
     const uid = ctx.helper.genUID();
-    await ctx.model.User.create({
+    await ctx.model.UserInfo.create({
       uid,
       username,
       password: bcrypt.hashSync(password, 3),
@@ -45,12 +45,11 @@ class UserService extends Service {
   }
 
   // 用户登录
-  async login(value) {
+  async login() {
     const { ctx, app } = this;
-    const { username, password } = value;
-
+    const { username, password } = ctx.request.body;
     // 验证用户是否存在
-    const user = await ctx.model.User.findOne({ username });
+    const user = await ctx.model.UserInfo.findOne({ username });
     if (!user) {
       return {
         code: 400,
@@ -85,7 +84,7 @@ class UserService extends Service {
   async getInfo() {
     const { ctx } = this;
     const uid = ctx.helper.getUID();
-    const { username, nickname, avatar } = await ctx.model.User.findOne({
+    const { username, nickname, avatar } = await ctx.model.UserInfo.findOne({
       uid,
     });
     return {

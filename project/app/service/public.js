@@ -4,7 +4,9 @@ const Service = require('egg').Service;
 const svgCaptcha = require('svg-captcha');
 
 class PublicService extends Service {
-  async create(id) {
+  async create() {
+    // const { ctx } = this;
+    // const id = ctx.query.id;
     const { data } = svgCaptcha.create({
       width: 100,
       height: 30,
