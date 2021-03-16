@@ -18,4 +18,5 @@ module.exports = app => {
 
   // public
   router.get('/public/captcha', controller.public.captcha);
+  router.get('/public/csrf-token', controller.public.initCsrfToken);
 };
