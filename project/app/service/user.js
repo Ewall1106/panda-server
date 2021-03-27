@@ -1,7 +1,6 @@
 'use strict';
 
 const Service = require('egg').Service;
-const bcrypt = require('bcrypt');
 
 class UserService extends Service {
   // 用户注册
@@ -33,7 +32,7 @@ class UserService extends Service {
     await ctx.model.UserInfo.create({
       uid,
       username,
-      password: bcrypt.hashSync(password, 3),
+      password,
       nickname: `用户${uid}`,
       avatar: 'https://s1.ax1x.com/2020/10/27/BQK16e.png',
     });
@@ -59,7 +58,7 @@ class UserService extends Service {
     }
 
     // 验证密码是否正确
-    if (!bcrypt.compareSync(password, user.password)) {
+    if (password !== user.password) {
       return {
         code: 400,
         status: false,

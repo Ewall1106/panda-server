@@ -35,6 +35,19 @@ module.exports = appInfo => {
     secret: 'panda',
   };
 
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
+
+  // cors
+  config.cors = {
+    origin: ctx => ctx.get('origin'),
+    credentials: true,
+    allowMethods: 'GET, HEAD, PUT, POST, DELETE, PATCH',
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
