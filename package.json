@@ -1,50 +1,57 @@
 {
   "name": "panda-server",
-  "version": "1.0.2",
-  "author": "Ewall&熊猫",
-  "description": "使用node+koa+mongodb实现mall商城的后端服务",
-  "main": "app.js",
-  "scripts": {
-    "dev": "nodemon app.js",
-    "start": "nodemon app.js"
+  "version": "2.0.0",
+  "description": "使用egg实现对vue-h5-template的后端服务支持。",
+  "private": true,
+  "egg": {
+    "declarations": true
   },
   "dependencies": {
-    "@koa/router": "^9.4.0",
-    "bcrypt": "^5.0.0",
-    "dayjs": "^1.9.1",
-    "jsonwebtoken": "^8.5.1",
-    "koa": "^2.13.0",
-    "koa-body": "^4.2.0",
-    "koa-combine-routers": "^4.0.2",
-    "koa-compress": "^5.0.1",
-    "koa-helmet": "^6.0.0",
-    "koa-json": "^2.0.2",
-    "koa-jwt": "^4.0.0",
-    "koa-logger": "^3.2.1",
-    "koa-onerror": "^4.1.0",
-    "koa-static": "^5.0.0",
-    "koa-views": "^6.3.0",
-    "mongoose": "^5.10.2",
-    "nanoid": "^3.1.16",
-    "nodemailer": "^6.4.11",
-    "redis": "^3.0.2",
+    "egg": "^2.15.1",
+    "egg-cors": "^2.2.3",
+    "egg-jwt": "^3.1.7",
+    "egg-mongoose": "^3.3.1",
+    "egg-scripts": "^2.11.0",
+    "nanoid": "^3.1.20",
     "svg-captcha": "^1.4.0"
   },
   "devDependencies": {
-    "cross-env": "^7.0.2",
-    "inquirer": "^7.3.3",
-    "nodemon": "^2.0.4",
-    "shelljs": "^0.8.4"
+    "autod": "^3.0.1",
+    "autod-egg": "^1.1.0",
+    "egg-bin": "^4.11.0",
+    "egg-ci": "^1.11.0",
+    "egg-mock": "^3.21.0",
+    "eslint": "^5.13.0",
+    "eslint-config-egg": "^7.1.0"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "scripts": {
+    "start": "egg-scripts start --title=egg-server-project",
+    "stop": "egg-scripts stop --title=egg-server-project",
+    "dev": "egg-bin dev",
+    "debug": "egg-bin debug",
+    "test": "npm run lint -- --fix && npm run test-local",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "lint": "eslint .",
+    "ci": "npm run lint && npm run cov",
+    "autod": "autod"
+  },
+  "ci": {
+    "version": "10"
   },
   "keywords": [
+    "egg",
     "node",
-    "koa",
     "mongodb",
     "mongoose"
   ],
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Ewall1106/panda-server"
-  }
+  },
+  "author": "Ewall&熊猫",
+  "license": "MIT"
 }
