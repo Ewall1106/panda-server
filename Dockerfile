@@ -1,16 +1,17 @@
-# 本镜像基于pm2镜像
-FROM keymetrics/pm2:latest-alpine
+FROM node:12-alpine
 
-# 指定工作目录
-WORKDIR /app
+RUN mkdir -p /egg
 
-# 将当前上下文中的文件添加到指定容器的/app/目录下
-# 就类似于git add .
-COPY . /app
+WORKDIR /egg
 
-RUN yarn config set registry https://registry.npm.taobao.org/ && \
-    yarn install
+COPY package.json /egg/package.json
 
-EXPOSE 3000
+RUN yarn config set registry https://registry.npm.taobao.org/
 
-CMD [ "pm2-runtime", "start", "process.yml" ]
+RUN yarn --production
+
+COPY . /egg
+
+EXPOSE 7001
+
+CMD yarn start

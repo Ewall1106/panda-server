@@ -1,44 +1,37 @@
-<p align="center">
-  <img width="100" height="100" src="https://raw.githubusercontent.com/Ewall1106/panda-vue-template/master/src/assets/logo.png">
-  <h3  align="center">Panda-mall商城的后端实现</h3>
-</p>
+## PANDA-SERVER
 
-<p align="center">
-  <a href="https://nodejs.org/">
-    <img src="https://img.shields.io/badge/node-10.16.0-brightgreen.svg" alt="nodejs">
+<p>
+  <a href="https://github.com/vuejs/vue">
+    <img src="https://img.shields.io/badge/egg-2.15.1-brightgreen.svg" alt="vue">
   </a>
-  <a href="https://koa.bootcss.com/">
-    <img src="https://img.shields.io/badge/koa-2.13.0-brightgreen.svg" alt="koa">
-  </a>
-   <a href="https://www.npmjs.com/">
-    <img src="https://img.shields.io/badge/npm-6.9.0-brightgreen.svg" alt="npm">
-  </a>
-  <a href="https://github.com/Ewall1106/panda-server/master/LICENSE">
+  <a href="https://github.com/Ewall1106/panda-vue-template/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license">
   </a>
 </p>
 
-## 介绍
+使用 `Egg` 实现对 [Vue-H5-Template](https://github.com/Ewall1106/vue-h5-template) 项目的基本后端服务支持。
 
-[Panda-mall](https://github.com/Ewall1106/mall/) 商城的后端项目，技术栈主要使用 `node+koa+mongodb` 来实现。
+## 基本说明
 
-- [文档说明](https://xwhx.top/backend/)
+- [文档说明](https://docs.xwhx.top/vue-h5-template/)
 - [更新日志](https://github.com/Ewall1106/panda-server/blob/master/changelog.md)
+- 手机扫码预览：
 
-## 使用
+<img width="200" class="zoom" src="https://z3.ax1x.com/2021/03/27/6zzC34.png">
+
+## 安装使用
 
 ```
 # 下载到本地
 $ git clone git@github.com:Ewall1106/panda-server.git
 
 # 客户端运行
-$ npm install
-$ npm run dev
+$ yarn install & yarn start
 ```
-> ⚠️ 运行前请先自行配置 `config/index.js` 文件。
+
+> ⚠️ 运行前请先自行在参照官网将数据库、redis 等进行相关配置。
 
 ## 协议
 
-[MIT](https://github.com/Ewall1106/panda-server/blob/master/LICENSE)
-
-Copyright (c) 2020-present Ewall&熊猫
+- [MIT](https://github.com/Ewall1106/panda-server/blob/master/LICENSE)
+- Copyright (c) 2021-present Ewall&熊猫

@@ -1,6 +1,12 @@
-## 当前规划
-
 ## 更新日志
+
+## [v2.0.0](https://github.com/Ewall1106/panda-server/tree/2.0.0)
+
+`2021-03-27`
+
+🎉 **Features**
+
+- 使用 `egg` 重构整个项目
 
 ## [v1.0.2](https://github.com/Ewall1106/panda-server/tree/1.0.2)
 

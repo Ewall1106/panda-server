@@ -1,7 +1,0 @@
-# process.yml
-apps:
-  - script: app.js
-    instance: 2
-    watch: true
-    env:
-      NODE_ENV: production
